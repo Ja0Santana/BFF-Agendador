@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "notificador", url = "${notificador.url}")
 public interface NotificadorClient {
     @PostMapping
-    void enviarEmail(@RequestBody TarefaDTOresponse tarefaDTOresponse, String token);
+    void enviarEmail(@RequestBody TarefaDTOresponse tarefaDTOresponse);
 }

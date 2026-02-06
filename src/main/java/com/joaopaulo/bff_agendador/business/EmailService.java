@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final NotificadorClient notificadorClient;
 
-    public void enviarEmail(TarefaDTOresponse tarefaDTOresponse, String token) {
-        notificadorClient.enviarEmail(tarefaDTOresponse, token);
+    public void enviarEmail(TarefaDTOresponse tarefaDTOresponse) {
+        notificadorClient.enviarEmail(tarefaDTOresponse);
     }
 }
