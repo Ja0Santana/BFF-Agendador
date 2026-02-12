@@ -8,8 +8,10 @@ import com.joaopaulo.bff_agendador.business.dto.out.EnderecoDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.TelefoneDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.UsuarioDTOresponse;
 import com.joaopaulo.bff_agendador.business.UsuarioService;
+import com.joaopaulo.bff_agendador.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class UsuarioController {
     @PostMapping
     @Operation(summary = "Criar um novo usuário", description = "Endpoint para criar um novo usuário no sistema.")
     @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso")
-    @ApiResponse(responseCode = "400", description = "Usuário já cadastrado")
+    @ApiResponse(responseCode = "409", description = "Usuário já cadastrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<UsuarioDTOresponse> salvarUsuario(@RequestBody UsuarioDTOrequest usuarioDTOrequest) {
         return ResponseEntity.ok(usuarioService.salvarUsuario(usuarioDTOrequest));
@@ -35,6 +37,7 @@ public class UsuarioController {
     @Operation(summary = "Login de usuário", description = "Endpoint para autenticar um usuário e obter um token de acesso.")
     @ApiResponse(responseCode = "200", description = "Usuário logado com sucesso")
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public String loginUsuario(@RequestBody LoginDTOrequest loginDTOrequest) {
         return usuarioService.loginUsuario(loginDTOrequest);
@@ -42,9 +45,10 @@ public class UsuarioController {
 
     @GetMapping
     @Operation(summary = "Buscar usuário por email", description = "Endpoint para buscar os dados de um usuário utilizando seu email" +
-            "extraido do token de acesso.")
+            "extraido do token de acesso.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso")
-    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<UsuarioDTOresponse> buscarUsuarioPorEmail(@RequestParam("email") String email,
                                                                     @RequestHeader(name = "Authorization", required = false) String token) {
@@ -53,9 +57,10 @@ public class UsuarioController {
 
     @DeleteMapping("/{email}")
     @Operation(summary = "Deletar usuário por email", description = "Endpoint para deletar um usuário utilizando seu email " +
-            "extraido do token de acesso.")
+            "extraido do token de acesso.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Usuário deletado com sucesso")
-    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<Void> deletarUsuarioPorEmail(@PathVariable String email,
                                                       @RequestHeader(name = "Authorization", required = false) String token) {
@@ -64,8 +69,10 @@ public class UsuarioController {
     }
 
     @PutMapping
-    @Operation(summary = "Atualizar dados do usuário", description = "Endpoint para atualizar os dados de um usuário.")
+    @Operation(summary = "Atualizar dados do usuário", description = "Endpoint para atualizar os dados de um usuário.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Dados do usuário atualizados com sucesso")
+    @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<UsuarioDTOresponse> atualizarDadosUsuario(@RequestBody UsuarioDTOrequest usuarioDTOrequest,
@@ -74,8 +81,10 @@ public class UsuarioController {
     }
 
     @PutMapping("/endereco")
-    @Operation(summary = "Atualizar endereço do usuário", description = "Endpoint para atualizar o endereço de um usuário.")
+    @Operation(summary = "Atualizar endereço do usuário", description = "Endpoint para atualizar o endereço de um usuário.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Endereço do usuário atualizado com sucesso")
+    @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Endereço não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<EnderecoDTOresponse> autalizarEnderecoUsuario(@RequestBody EnderecoDTOrequest enderecoDTOrequest,
@@ -85,8 +94,10 @@ public class UsuarioController {
     }
 
     @PutMapping("/telefone")
-    @Operation(summary = "Atualizar telefone do usuário", description = "Endpoint para atualizar o telefone de um usuário.")
+    @Operation(summary = "Atualizar telefone do usuário", description = "Endpoint para atualizar o telefone de um usuário.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Telefone do usuário atualizado com sucesso")
+    @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Telefone não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<TelefoneDTOresponse> autalizarTelefoneUsuario(@RequestBody TelefoneDTOrequest telefoneDTOrequest,
@@ -96,8 +107,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/endereco")
-    @Operation(summary = "Cadastrar novo endereço para o usuário", description = "Endpoint para cadastrar um novo endereço para o usuário.")
+    @Operation(summary = "Cadastrar novo endereço para o usuário", description = "Endpoint para cadastrar um novo endereço para o usuário.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Endereço cadastrado com sucesso")
+    @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<EnderecoDTOresponse> cadastrarEndereco(@RequestBody EnderecoDTOrequest enderecoDTOrequest,
@@ -106,9 +119,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/telefone")
-    @Operation(summary = "Cadastrar novo telefone para o usuário", description = "Endpoint para cadastrar um novo telefone para o usuário.")
+    @Operation(summary = "Cadastrar novo telefone para o usuário", description = "Endpoint para cadastrar um novo telefone para o usuário.",
+            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
     @ApiResponse(responseCode = "200", description = "Telefone cadastrado com sucesso")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<TelefoneDTOresponse> cadastrarTelefone(@RequestBody TelefoneDTOrequest telefoneDTOrequest,
                                                                  @RequestHeader(name = "Authorization", required = false) String token) {
