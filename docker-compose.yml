@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  agendador-tarefas:
+    build: ..\agendador-tarefas
+    container_name: agendador-tarefas
+    ports:
+      - "8081:8081"
+    environment:
+      - USUARIO_URL=http://usuario:8080/usuario
+      - TZ=America/Sao_Paulo
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/${MONGO_DB}
+    depends_on:
+      - mongo
+    restart: on-failure
+
+  bff-agendador:
+    build: .
+    container_name: bff-agendador
+    ports:
+      - "8083:8083"
+    environment:
+      - USUARIO_URL=http://usuario:8080/usuario
+      - AGENDADOR_TAREFAS_URL=http://agendador-tarefas:8081/tarefas
+      - NOTIFICADOR_URL=http://notificador:8082/email
+      - TZ=America/Sao_Paulo
+    restart: on-failure
+
+  usuario:
+    build: ..\usuario
+    container_name: usuario
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASS}
+      - TZ=America/Sao_Paulo
+    depends_on:
+      - postgres
+    restart: on-failure
+
+  notificador:
+    build: ..\notificador
+    container_name: notificador
+    ports:
+      - "8082:8082"
+    environment:
+      - MAILTRAP_USER=${MAILTRAP_USER}
+      - MAILTRAP_PASS=${MAILTRAP_PASS}
+      - TZ=America/Sao_Paulo
+    restart: on-failure
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      POSTGRES_DB: ${POSTGRES_DB}
+      TZ: America/Sao_Paulo
+    ports:
+      - "5433:5432"
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: no
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+      TZ: America/Sao_Paulo
+
+networks:
+  default:
+    driver: bridge

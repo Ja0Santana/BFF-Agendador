@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/usuario")
 @RequiredArgsConstructor
 @Tag(name = "Usuario", description = "Endpoints para criação e gerenciamento de usuários")
+@SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
@@ -45,8 +46,7 @@ public class UsuarioController {
 
     @GetMapping
     @Operation(summary = "Buscar usuário por email", description = "Endpoint para buscar os dados de um usuário utilizando seu email" +
-            "extraido do token de acesso.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+            "extraido do token de acesso.")
     @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso")
     @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
@@ -57,8 +57,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{email}")
     @Operation(summary = "Deletar usuário por email", description = "Endpoint para deletar um usuário utilizando seu email " +
-            "extraido do token de acesso.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+            "extraido do token de acesso.")
     @ApiResponse(responseCode = "200", description = "Usuário deletado com sucesso")
     @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
@@ -69,8 +68,7 @@ public class UsuarioController {
     }
 
     @PutMapping
-    @Operation(summary = "Atualizar dados do usuário", description = "Endpoint para atualizar os dados de um usuário.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+    @Operation(summary = "Atualizar dados do usuário", description = "Endpoint para atualizar os dados de um usuário.")
     @ApiResponse(responseCode = "200", description = "Dados do usuário atualizados com sucesso")
     @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
@@ -81,8 +79,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/endereco")
-    @Operation(summary = "Atualizar endereço do usuário", description = "Endpoint para atualizar o endereço de um usuário.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+    @Operation(summary = "Atualizar endereço do usuário", description = "Endpoint para atualizar o endereço de um usuário.")
     @ApiResponse(responseCode = "200", description = "Endereço do usuário atualizado com sucesso")
     @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Endereço não encontrado")
@@ -94,8 +91,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/telefone")
-    @Operation(summary = "Atualizar telefone do usuário", description = "Endpoint para atualizar o telefone de um usuário.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+    @Operation(summary = "Atualizar telefone do usuário", description = "Endpoint para atualizar o telefone de um usuário.")
     @ApiResponse(responseCode = "200", description = "Telefone do usuário atualizado com sucesso")
     @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Telefone não encontrado")
@@ -107,8 +103,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/endereco")
-    @Operation(summary = "Cadastrar novo endereço para o usuário", description = "Endpoint para cadastrar um novo endereço para o usuário.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+    @Operation(summary = "Cadastrar novo endereço para o usuário", description = "Endpoint para cadastrar um novo endereço para o usuário.")
     @ApiResponse(responseCode = "200", description = "Endereço cadastrado com sucesso")
     @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
@@ -119,8 +114,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/telefone")
-    @Operation(summary = "Cadastrar novo telefone para o usuário", description = "Endpoint para cadastrar um novo telefone para o usuário.",
-            security = { @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME) })
+    @Operation(summary = "Cadastrar novo telefone para o usuário", description = "Endpoint para cadastrar um novo telefone para o usuário.")
     @ApiResponse(responseCode = "200", description = "Telefone cadastrado com sucesso")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
