@@ -4,6 +4,7 @@ import com.joaopaulo.bff_agendador.business.dto.in.EnderecoDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.TelefoneDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.UsuarioDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.out.CepDTOResponse;
 import com.joaopaulo.bff_agendador.business.dto.out.EnderecoDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.TelefoneDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.UsuarioDTOresponse;
@@ -47,4 +48,7 @@ public interface UsuarioClient {
     @PostMapping("/telefone")
     TelefoneDTOresponse cadastrarTelefone(@RequestBody TelefoneDTOrequest telefoneDTOrequest,
                                           @RequestHeader("Authorization") String token);
+
+    @GetMapping("/endereco/{cep}")
+    CepDTOResponse buscarDadosDeEnderecoPorCep(@PathVariable("cep") String cep);
 }
