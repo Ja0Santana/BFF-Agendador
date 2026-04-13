@@ -46,14 +46,12 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @Operation(summary = "Buscar usuário por email", description = "Endpoint para buscar os dados de um usuário utilizando seu email" +
-            "extraido do token de acesso.")
+    @Operation(summary = "Buscar dados do usuário autenticado", description = "Retorna os dados do usuário identificado pelo token JWT.")
     @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso")
-    @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
+    @ApiResponse(responseCode = "401", description = "Token inválido ou ausente")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-    public ResponseEntity<UsuarioDTOresponse> buscarUsuarioPorEmail(@RequestParam("email") String email,
-                                                                    @RequestHeader(name = "Authorization", required = false) String token) {
-        return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email, token));
+    public ResponseEntity<UsuarioDTOresponse> buscarUsuarioAutenticado(@RequestHeader(name = "Authorization", required = false) String token) {
+        return ResponseEntity.ok(usuarioService.buscarUsuarioAutenticado(token));
     }
 
     @DeleteMapping("/{email}")

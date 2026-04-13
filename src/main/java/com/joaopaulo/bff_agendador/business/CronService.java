@@ -34,7 +34,7 @@ public class CronService {
         List<TarefaDTOresponse> listaDeTarefas = tarefaService.buscarListaTarefasPorPeriodo(horaFutura, horaFuturaMais5Minutos, token);
         log.info("Tarefas encontradas: {}", listaDeTarefas);
 
-        listaDeTarefas.forEach((tarefa) -> {
+        listaDeTarefas.forEach(tarefa -> {
             emailService.enviarEmail(tarefa);
             log.info("Enviado email para o usuario: {}", tarefa.getEmailUsuario());
             tarefaService.alterarStatusDeNotificacaoTarefa(StatusNotificacao.NOTIFICADA, tarefa.getId(), token);
