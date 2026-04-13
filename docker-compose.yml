@@ -10,6 +10,7 @@ services:
       - USUARIO_URL=http://usuario:8080/usuario
       - TZ=America/Sao_Paulo
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/${MONGO_DB}
+      - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - mongo
     restart: on-failure
@@ -24,6 +25,8 @@ services:
       - AGENDADOR_TAREFAS_URL=http://agendador-tarefas:8081/tarefas
       - NOTIFICADOR_URL=http://notificador:8082/email
       - TZ=America/Sao_Paulo
+      - CRON_USER_EMAIL=${CRON_USER_EMAIL}
+      - CRON_USER_PASSWORD=${CRON_USER_PASSWORD}
     restart: on-failure
 
   usuario:
@@ -35,6 +38,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASS}
+      - JWT_SECRET=${JWT_SECRET}
       - TZ=America/Sao_Paulo
     depends_on:
       - postgres

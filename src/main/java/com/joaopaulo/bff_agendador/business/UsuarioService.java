@@ -18,6 +18,10 @@ import org.springframework.stereotype.Service;
 public class UsuarioService {
     private final UsuarioClient usuarioClient;
 
+    public UsuarioDTOresponse buscarUsuarioAutenticado(String token) {
+        return usuarioClient.buscarUsuarioAutenticado(token);
+    }
+
     public UsuarioDTOresponse buscarUsuarioPorEmail(String email, String token) {
         return usuarioClient.buscarUsuarioPorEmail(email, token);
     }
