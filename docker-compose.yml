@@ -7,7 +7,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - USUARIO_URL=http://usuario:8080/usuario
+      - USUARIO_URL=http://usuario:8080
       - TZ=America/Sao_Paulo
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/${MONGO_DB}
       - JWT_SECRET=${JWT_SECRET}
@@ -40,6 +40,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASS}
       - JWT_SECRET=${JWT_SECRET}
       - TZ=America/Sao_Paulo
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
     depends_on:
       - postgres
     restart: on-failure
@@ -63,20 +65,29 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
       POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
       TZ: America/Sao_Paulo
     ports:
       - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   mongo:
     image: mongo:latest
     container_name: mongo
-    restart: no
+    restart: always
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_DB}
       TZ: America/Sao_Paulo
+    volumes:
+      - mongo_data:/data/db
 
 networks:
   default:
     driver: bridge
+
+volumes:
+  postgres_data:
+  mongo_data:

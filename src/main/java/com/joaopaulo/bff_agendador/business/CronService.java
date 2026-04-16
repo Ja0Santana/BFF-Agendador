@@ -41,6 +41,34 @@ public class CronService {
         });
     }
 
+    @Scheduled(cron = "0 0/15 * * * *") // Roda a cada 15 minutos
+    public void verificarTarefasVencidas() {
+        String token = loginUsuario(converterUsuarioDTOrequest());
+        log.info("Verificando tarefas vencidas...");
+        
+        // Buscamos tarefas que deveriam ter ocorrido no passado (até agora)
+        // e que ainda estão PENDENTES ou NOTIFICADAS
+        LocalDateTime passadoDistante = LocalDateTime.now().minusDays(30);
+        LocalDateTime agora = LocalDateTime.now();
+        
+        List<TarefaDTOresponse> tarefasVencidas = tarefaService.buscarListaTarefasPorPeriodo(passadoDistante, agora, token);
+        
+        tarefasVencidas.forEach(tarefa -> {
+            if (tarefa.getStatusNotificacao() == StatusNotificacao.PENDENTE || 
+                tarefa.getStatusNotificacao() == StatusNotificacao.NOTIFICADA) {
+                
+                log.info("Marcando tarefa como VENCIDA: {}", tarefa.getNomeTarefa());
+                
+                // Primeiro atualizamos o status para VENCIDA para garantir que o email vá com o template correto
+                tarefa.setStatusNotificacao(StatusNotificacao.VENCIDA);
+                tarefaService.alterarStatusDeNotificacaoTarefa(StatusNotificacao.VENCIDA, tarefa.getId(), token);
+                
+                // Enviamos o e-mail de aviso
+                emailService.enviarEmail(tarefa);
+            }
+        });
+    }
+
     private String loginUsuario(LoginDTOrequest loginDTOrequest) {
         return usuarioService.loginUsuario(loginDTOrequest);
     }

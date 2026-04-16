@@ -11,6 +11,9 @@ import java.util.List;
 public class UsuarioDTOresponse {
     private String nome;
     private String email;
+    private String senha;
     private List<EnderecoDTOresponse> enderecos;
     private List<TelefoneDTOresponse> telefones;
+    private String fotoUrl;
+    private boolean verificado;
 }

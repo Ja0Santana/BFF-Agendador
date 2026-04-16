@@ -61,4 +61,12 @@ public class UsuarioService {
     public CepDTOResponse buscarDadosDeEnderecoPorCep(String cep) {
         return usuarioClient.buscarDadosDeEnderecoPorCep(cep);
     }
+
+    public void verificarEmail(com.joaopaulo.bff_agendador.business.dto.in.VerificationDTORequest verificationDTORequest, String token) {
+        usuarioClient.verificarEmail(verificationDTORequest, token);
+    }
+
+    public void reenviarCodigo(String email, String token) {
+        usuarioClient.reenviarCodigo(email, token);
+    }
 }

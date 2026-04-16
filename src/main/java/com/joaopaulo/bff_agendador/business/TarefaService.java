@@ -17,6 +17,11 @@ public class TarefaService {
     private final TarefaClient tarefaClient;
 
     public TarefaDTOresponse gravarTarefa(TarefaDTOrequest tarefaDTOrequest, String token) {
+        if (tarefaDTOrequest.getNotificar() != null && !tarefaDTOrequest.getNotificar()) {
+            // Se o usuário desativou a notificação, salvamos como DESATIVADA
+            TarefaDTOresponse response = tarefaClient.gravarTarefa(tarefaDTOrequest, token);
+            return tarefaClient.alterarStatusDeNotificacaoTarefa(StatusNotificacao.DESATIVADA, response.getId(), token);
+        }
         return tarefaClient.gravarTarefa(tarefaDTOrequest, token);
     }
 

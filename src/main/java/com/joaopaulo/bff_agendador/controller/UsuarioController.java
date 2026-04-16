@@ -132,4 +132,23 @@ public class UsuarioController {
     public ResponseEntity<CepDTOResponse> buscarDadosDeEnderecoPorCep(@PathVariable("cep") String cep) {
         return ResponseEntity.ok(usuarioService.buscarDadosDeEnderecoPorCep(cep));
     }
+
+    @PostMapping("/verificar")
+    @Operation(summary = "Verificar e-mail do usuário", description = "Endpoint para validar o código de 6 dígitos enviado por e-mail no microserviço de usuários.")
+    @ApiResponse(responseCode = "200", description = "E-mail verificado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Código inválido ou expirado")
+    public ResponseEntity<Void> verificarEmail(@RequestBody com.joaopaulo.bff_agendador.business.dto.in.VerificationDTORequest verificationDTORequest,
+                                               @RequestHeader(name = "Authorization", required = false) String token) {
+        usuarioService.verificarEmail(verificationDTORequest, token);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reenviar-codigo")
+    @Operation(summary = "Reenviar código de verificação", description = "Endpoint para solicitar um novo código de verificação.")
+    @ApiResponse(responseCode = "200", description = "Novo código solicitado com sucesso")
+    public ResponseEntity<Void> reenviarCodigo(@RequestParam("email") String email,
+                                               @RequestHeader(name = "Authorization", required = false) String token) {
+        usuarioService.reenviarCodigo(email, token);
+        return ResponseEntity.ok().build();
+    }
 }

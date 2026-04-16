@@ -54,4 +54,12 @@ public interface UsuarioClient {
 
     @GetMapping("/endereco/{cep}")
     CepDTOResponse buscarDadosDeEnderecoPorCep(@PathVariable("cep") String cep);
+
+    @PostMapping("/verificar")
+    Void verificarEmail(@RequestBody com.joaopaulo.bff_agendador.business.dto.in.VerificationDTORequest verificationDTORequest, 
+                        @RequestHeader("Authorization") String token);
+
+    @PostMapping("/reenviar-codigo")
+    Void reenviarCodigo(@RequestParam("email") String email, 
+                        @RequestHeader("Authorization") String token);
 }
