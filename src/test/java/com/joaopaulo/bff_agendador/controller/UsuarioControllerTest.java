@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UsuarioController.class)
+@SuppressWarnings("null")
 class UsuarioControllerTest {
 
     @Autowired
@@ -152,3 +153,5 @@ class UsuarioControllerTest {
                 .andExpect(status().isOk());
     }
 }
+
+
