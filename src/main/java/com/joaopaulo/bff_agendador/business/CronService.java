@@ -1,6 +1,6 @@
 package com.joaopaulo.bff_agendador.business;
 
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.out.TarefaDTOresponse;
 import com.joaopaulo.bff_agendador.infrastructure.enums.StatusNotificacao;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class CronService {
 
     @Scheduled(cron = "${cron.horario}")
     public void buscarTarefasProximaHora() {
-        String token = loginUsuario(converterUsuarioDTOrequest());
+        String token = autenticarUsuario(converterUsuarioDTORequest());
         log.info("Iniciada a busca de tarefas");
         LocalDateTime horaFutura = LocalDateTime.now().plusHours(1);
         LocalDateTime horaFuturaMais5Minutos = horaFutura.plusMinutes(5);
@@ -43,7 +43,7 @@ public class CronService {
 
     @Scheduled(cron = "0 0/15 * * * *") // Roda a cada 15 minutos
     public void verificarTarefasVencidas() {
-        String token = loginUsuario(converterUsuarioDTOrequest());
+        String token = autenticarUsuario(converterUsuarioDTORequest());
         log.info("Verificando tarefas vencidas...");
         
         // Buscamos tarefas que deveriam ter ocorrido no passado (até agora)
@@ -69,12 +69,12 @@ public class CronService {
         });
     }
 
-    private String loginUsuario(LoginDTOrequest loginDTOrequest) {
-        return usuarioService.loginUsuario(loginDTOrequest);
+    private String autenticarUsuario(LoginDTORequest loginDTORequest) {
+        return usuarioService.autenticarUsuario(loginDTORequest);
     }
 
-    public LoginDTOrequest converterUsuarioDTOrequest() {
-        return LoginDTOrequest.builder()
+    public LoginDTORequest converterUsuarioDTORequest() {
+        return LoginDTORequest.builder()
                 .email(usuarioEmail)
                 .senha(usuarioSenha)
                 .build();

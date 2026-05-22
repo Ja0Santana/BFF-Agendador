@@ -1,14 +1,16 @@
 package com.joaopaulo.bff_agendador.infrastructure.client;
 
 import com.joaopaulo.bff_agendador.business.dto.in.EnderecoDTOrequest;
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.in.TelefoneDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.UsuarioDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.out.CepDTOResponse;
 import com.joaopaulo.bff_agendador.business.dto.out.EnderecoDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.TelefoneDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.UsuarioDTOresponse;
+import com.joaopaulo.bff_agendador.business.dto.in.ResetSenhaDTORequest;
 import org.springframework.cloud.openfeign.FeignClient;
+
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "usuario", url = "${usuario.url}")
@@ -24,7 +26,10 @@ public interface UsuarioClient {
     UsuarioDTOresponse salvarUsuario(@RequestBody UsuarioDTOrequest usuarioDTOrequest);
 
     @PostMapping("/login")
-    String loginUsuario(@RequestBody LoginDTOrequest loginDTOrequest);
+    String autenticarUsuario(@RequestBody LoginDTORequest loginDTORequest);
+
+    @PostMapping("/auth/google")
+    String loginComGoogle(@RequestBody com.joaopaulo.bff_agendador.business.dto.in.GoogleLoginDTORequest googleLoginDTORequest);
 
     @DeleteMapping("/{email}")
     Void deletarUsuarioPorEmail(@PathVariable String email,
@@ -62,4 +67,11 @@ public interface UsuarioClient {
     @PostMapping("/reenviar-codigo")
     Void reenviarCodigo(@RequestParam("email") String email, 
                         @RequestHeader("Authorization") String token);
+
+    @PostMapping("/recuperar-senha")
+    Void solicitarRecuperacaoSenha(@RequestParam("email") String email);
+
+    @PostMapping("/resetar-senha")
+    Void resetarSenha(@RequestBody ResetSenhaDTORequest resetSenhaDTORequest);
 }
+

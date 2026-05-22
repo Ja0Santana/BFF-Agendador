@@ -1,6 +1,6 @@
 package com.joaopaulo.bff_agendador.business;
 
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.out.TarefaDTOresponse;
 import com.joaopaulo.bff_agendador.infrastructure.enums.StatusNotificacao;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ class CronServiceTest {
         ReflectionTestUtils.setField(cronService, "usuarioSenha", "senha123");
         
         // Mock do login que acontece em quase todas as operações de cron
-        lenient().when(usuarioService.loginUsuario(any(LoginDTOrequest.class))).thenReturn(token);
+        lenient().when(usuarioService.autenticarUsuario(any(LoginDTORequest.class))).thenReturn(token);
     }
 
     @Test

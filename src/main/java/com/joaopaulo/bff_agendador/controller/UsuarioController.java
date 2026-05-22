@@ -1,14 +1,16 @@
 package com.joaopaulo.bff_agendador.controller;
 
 import com.joaopaulo.bff_agendador.business.dto.in.EnderecoDTOrequest;
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.in.TelefoneDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.UsuarioDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.out.CepDTOResponse;
 import com.joaopaulo.bff_agendador.business.dto.out.EnderecoDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.TelefoneDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.UsuarioDTOresponse;
+import com.joaopaulo.bff_agendador.business.dto.in.ResetSenhaDTORequest;
 import com.joaopaulo.bff_agendador.business.UsuarioService;
+
 import com.joaopaulo.bff_agendador.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,8 +43,14 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "403", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-    public String loginUsuario(@RequestBody LoginDTOrequest loginDTOrequest) {
-        return usuarioService.loginUsuario(loginDTOrequest);
+    public ResponseEntity<String> login(@RequestBody LoginDTORequest loginDTORequest) {
+        return ResponseEntity.ok(usuarioService.autenticarUsuario(loginDTORequest));
+    }
+
+    @PostMapping("/auth/google")
+    @Operation(summary = "Login/Cadastro via Google OAuth2", description = "Porta de entrada do BFF para login via Google.")
+    public ResponseEntity<String> loginComGoogle(@RequestBody com.joaopaulo.bff_agendador.business.dto.in.GoogleLoginDTORequest googleLoginDTORequest) {
+        return ResponseEntity.ok(usuarioService.loginComGoogle(googleLoginDTORequest));
     }
 
     @GetMapping
@@ -51,6 +59,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Token inválido ou ausente")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     public ResponseEntity<UsuarioDTOresponse> buscarUsuarioAutenticado(@RequestHeader(name = "Authorization", required = false) String token) {
+        System.out.println("DEBUG - BFF.buscarUsuarioAutenticado - Token recebido: " + (token != null ? (token.substring(0, Math.min(token.length(), 20)) + "...") : "null"));
         return ResponseEntity.ok(usuarioService.buscarUsuarioAutenticado(token));
     }
 
@@ -151,4 +160,22 @@ public class UsuarioController {
         usuarioService.reenviarCodigo(email, token);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/recuperar-senha")
+    @Operation(summary = "Solicitar recuperação de senha", description = "Endpoint para solicitar o envio de um código de recuperação de senha por e-mail.")
+    @ApiResponse(responseCode = "200", description = "Código de recuperação solicitado com sucesso")
+    public ResponseEntity<Void> solicitarRecuperacaoSenha(@RequestParam("email") String email) {
+        usuarioService.solicitarRecuperacaoSenha(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/resetar-senha")
+    @Operation(summary = "Resetar senha do usuário", description = "Endpoint para definir uma nova senha utilizando o código de recuperação.")
+    @ApiResponse(responseCode = "200", description = "Senha resetada com sucesso")
+    @ApiResponse(responseCode = "400", description = "Código inválido ou senha fraca")
+    public ResponseEntity<Void> resetarSenha(@RequestBody ResetSenhaDTORequest resetSenhaDTORequest) {
+        usuarioService.resetarSenha(resetSenhaDTORequest);
+        return ResponseEntity.ok().build();
+    }
 }
+

@@ -7,8 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginDTORequest {
+public class ResetSenhaDTORequest {
     private String email;
-    private String senha;
-    private Boolean lembrarMe;
+    private String codigo;
+    private String novaSenha;
 }

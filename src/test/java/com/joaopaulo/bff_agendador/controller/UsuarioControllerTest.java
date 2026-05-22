@@ -3,7 +3,7 @@ package com.joaopaulo.bff_agendador.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joaopaulo.bff_agendador.business.UsuarioService;
 import com.joaopaulo.bff_agendador.business.dto.in.EnderecoDTOrequest;
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.in.TelefoneDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.UsuarioDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.out.CepDTOResponse;
@@ -51,8 +51,8 @@ class UsuarioControllerTest {
     @Test
     @DisplayName("Deve realizar login")
     void deveRealizarLogin() throws Exception {
-        LoginDTOrequest request = LoginDTOrequest.builder().build();
-        when(usuarioService.loginUsuario(any())).thenReturn("token");
+        LoginDTORequest request = LoginDTORequest.builder().build();
+        when(usuarioService.autenticarUsuario(any())).thenReturn("token");
 
         mockMvc.perform(post("/usuario/login")
                 .contentType(MediaType.APPLICATION_JSON)

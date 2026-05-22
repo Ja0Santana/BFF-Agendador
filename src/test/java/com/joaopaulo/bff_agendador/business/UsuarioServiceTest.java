@@ -1,7 +1,7 @@
 package com.joaopaulo.bff_agendador.business;
 
 import com.joaopaulo.bff_agendador.business.dto.in.EnderecoDTOrequest;
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.in.TelefoneDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.UsuarioDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.out.CepDTOResponse;
@@ -59,13 +59,13 @@ class UsuarioServiceTest {
     @Test
     @DisplayName("Deve delegar login")
     void deveDelegarLogin() {
-        LoginDTOrequest request = LoginDTOrequest.builder().build();
-        when(usuarioClient.loginUsuario(request)).thenReturn("token");
+        LoginDTORequest request = LoginDTORequest.builder().build();
+        when(usuarioClient.autenticarUsuario(request)).thenReturn("token");
         
-        String result = usuarioService.loginUsuario(request);
+        String result = usuarioService.autenticarUsuario(request);
         
         assertThat(result).isEqualTo("token");
-        verify(usuarioClient).loginUsuario(request);
+        verify(usuarioClient).autenticarUsuario(request);
     }
 
     @Test

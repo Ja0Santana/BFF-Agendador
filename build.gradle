@@ -67,6 +67,6 @@ sonarqube {
 	properties {
 		property "sonar.projectKey", "bff-agendador"
 		property "sonar.host.url", System.getenv("SONAR_HOST_URL") ?: "http://localhost:9000"
-		property "sonar.token", System.getenv("SONAR_TOKEN") ?: ""
+		property "sonar.token", System.getenv("SONAR_TOKEN") ?: project.findProperty("sonar.token") ?: ""
 	}
 }

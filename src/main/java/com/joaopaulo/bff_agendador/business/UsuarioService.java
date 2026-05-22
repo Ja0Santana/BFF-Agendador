@@ -2,14 +2,16 @@ package com.joaopaulo.bff_agendador.business;
 
 
 import com.joaopaulo.bff_agendador.business.dto.in.EnderecoDTOrequest;
-import com.joaopaulo.bff_agendador.business.dto.in.LoginDTOrequest;
+import com.joaopaulo.bff_agendador.business.dto.in.LoginDTORequest;
 import com.joaopaulo.bff_agendador.business.dto.in.TelefoneDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.in.UsuarioDTOrequest;
 import com.joaopaulo.bff_agendador.business.dto.out.CepDTOResponse;
 import com.joaopaulo.bff_agendador.business.dto.out.EnderecoDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.TelefoneDTOresponse;
 import com.joaopaulo.bff_agendador.business.dto.out.UsuarioDTOresponse;
+import com.joaopaulo.bff_agendador.business.dto.in.ResetSenhaDTORequest;
 import com.joaopaulo.bff_agendador.infrastructure.client.UsuarioClient;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +32,12 @@ public class UsuarioService {
         return usuarioClient.salvarUsuario(usuarioDTOrequest);
     }
 
-    public String loginUsuario(LoginDTOrequest loginDTOrequest) {
-        return usuarioClient.loginUsuario(loginDTOrequest);
+    public String autenticarUsuario(LoginDTORequest loginDTORequest) {
+        return usuarioClient.autenticarUsuario(loginDTORequest);
+    }
+
+    public String loginComGoogle(com.joaopaulo.bff_agendador.business.dto.in.GoogleLoginDTORequest googleLoginDTORequest) {
+        return usuarioClient.loginComGoogle(googleLoginDTORequest);
     }
 
     public void deletarUsuarioPorEmail(String email, String token) {
@@ -69,4 +75,13 @@ public class UsuarioService {
     public void reenviarCodigo(String email, String token) {
         usuarioClient.reenviarCodigo(email, token);
     }
+
+    public void solicitarRecuperacaoSenha(String email) {
+        usuarioClient.solicitarRecuperacaoSenha(email);
+    }
+
+    public void resetarSenha(ResetSenhaDTORequest resetSenhaDTORequest) {
+        usuarioClient.resetarSenha(resetSenhaDTORequest);
+    }
 }
+
